@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{padding: 0;margin: 0;}
+        body{background-color: #000;height: 2000px;}
+        .box{height: 500px;width: 980px;border:2px solid aqua;transform-style: preserve-3d;perspective: 1500px;}
+        .center{position: absolute;margin: auto;left: 0;top: 0;right: 0;bottom: 0;}
+        .item{position: absolute;border-radius: 10px;transition: all 1s;transform-origin: bottom;}
+        .pre{position: absolute;left: 0;}
+        .next{position: absolute;right: 0;}
+
+        @keyframes active{
+            0%{}
+        }
+    </style>
+    <script src="js/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+<div class="box center">
+    <button type="button" class="pre">上一张</button>
+    <button type="button" class="next">下一张</button>
+</div>
+</body>
+</html>
+<script>
+    $(function () {
+        var box = $(".box"),pre = $(".pre"),next = $('.next');
+        var hPre = pre.height(),hNext = next.height(),w = box.width(),h = box.height();
+        var num = 5,state=true;
+        for (var i = 0; i < num; i++) {
+            var z = i * (-50);
+            $('<div class="item"></div>')
+                .width(w)
+                .height(h)
+                .css({
+                    "transform": "translateZ(" + z + "px)",
+                    "backgroundImage": "url(images/" + i + ".jpg)"
+                })
+                .appendTo(box);
+        }
+        box.css({"transform": "rotateX(-30deg)"});
+        pre.css({"top": hPre + h});
+        next.css({"top": hNext + h});
+        next.click(function () {
+            backwards();
+        });
+        function backwards() {
+            var first=$('.item').eq(0);
+            first.css({"transform":"rotateX(180deg)","opacity":0.1});
+            $('.item:gt(0)').each(function (i) {
+                var z = i * (-50);
+                $(this).css({"transform":"translateZ("+z+"px)"});
+            });
+            setTimeout(function () {
+                first.css({"transform":"rotateX(0deg) translateZ(-200px)","opacity":1})
+                    .appendTo(box);
+            },1000);
+        }
+        pre.click(function () {
+            if(!state){return false;}
+            state=false;
+            var last = $('.item:last');
+            last.css({"transform": "rotateX(180deg) translateZ(50px)", "opacity": 0.1}).prependTo(box);
+            setTimeout(function (){
+                last.css({"transform": "rotateX(0deg)", "opacity":1});
+                set();
+                setTimeout(function () {
+                    state=true;
+                },1000);
+            });
+        });
+        function set() {
+            $('.item').each(function (i) {
+                var z = i * (-50);
+                $(this).css({"transform": "translateZ(" + z + "px)"});
+            });
+        }
+        var timer;
+        function autoPlay(){//---------自动播放函数
+            timer=setInterval(backwards,2000);
+        }
+        autoPlay();
+        box.hover(function () {//----------hover事件
+            clearInterval(timer);
+        },function () {
+            autoPlay();
+        });
+        /*next.click(function () {
+         var first = $('.item:first');
+         first.css({"transform": "rotateX(180deg)", "opacity": 0.1});
+         setTimeout(function () {
+         first.css({"transform": "rotateX(0deg) translateZ(-250px)", "opacity": 1})
+         .appendTo(box);
+         setTimeout(set, 500);
+         }, 1000);
+         });
+         pre.click(function () {
+         var last = $('.item:last');
+         last.css({"transform": "rotateX(180deg) translateZ(50px)", "opacity": 0.1}).prependTo(box);
+         setTimeout(function () {
+         last.css({"transform": "rotateX(0deg)", "opacity":1});
+         set();
+         }, 1);
+         });
+         function set() {
+         $('.item').each(function (i) {
+         var z = i * (-50);
+         $(this).css({"transform": "translateZ(" + z + "px)"});
+         });
+         }*/
+    });
+</script>

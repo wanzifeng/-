@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{padding: 0;margin: 0}
+        body{background-color: #000;width: 100%;height: 2000px;}
+        .slide{width: 980px;height: 500px;transform-style: preserve-3d;position: absolute;left: 0;top: 0;right: 0;  bottom:0;margin: auto;}
+        .pic{position: absolute;}
+    </style>
+    <script src="js/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+<div class="slide"></div>
+</body>
+</html>
+<script>
+    $(function(){
+        var slide=$(".slide");
+        var num=4;
+        var w=slide.width();
+        var h=slide.height();
+        for (var i = 0; i < num; i++) {
+            $('<div class="item"></div>').appendTo(slide)
+        }
+        var numb=5;
+        var pW=w/numb;
+        $('.item').each(function (index,element) {
+            var deg=index*90;
+            for(var i=0;i<numb;i++){
+                var x=i*pW;
+                $('<div class="pic"></div>')
+                    .width(pW)
+                    .height(h)
+                    .css({
+                        "left":x+"px",
+                        "backgroundImage": "url(images/" + index + ".jpg)",
+                        "backgroundPosition":-x+"px 0px",
+                        "transform": "rotateX(" + deg + "deg) translateZ(250px)"
+                    })
+                    .appendTo($(element));
+            }
+        });
+        var state=true;
+        var n=0;
+        $('body').click(function () {
+            if(!state){
+                return false;
+            }
+            clickEvent();
+        });
+        function clickEvent() {
+            state=false;
+            n++;
+            $('.item').each(function (index) {
+                var deg=index*90+n*(-90);
+                $(this).children('.pic').each(function (i) {
+                    var delay=i*0.2;
+                    $(this).css({
+                        "transition":"transform 1s "+delay+"s",
+                        "transform":"rotateX("+deg+"deg) translateZ(250px)"
+                    });
+                });
+            });
+            setTimeout(function () {
+                state=true;
+            },2000);
+        }
+    });
+</script>

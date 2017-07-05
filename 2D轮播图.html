@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{padding: 0;margin: 0;}
+        body{background-color: #000;}
+        .box{width: 600px;height:400px;position: absolute;left: 0;top:0;right: 0;bottom: 0;margin: auto;background-color: #fff;list-style: none;overflow: hidden;}
+        .box .pic{position: relative;left: 0;background-color: #4fa2c4;float: left;background-size: auto;overflow: hidden;}
+        span{text-indent: -1000px;position: absolute;}
+        ul{list-style: none;position: absolute;bottom: 0;left: 0;z-index: 2}
+        li{float: left;width: 30px;height:30px;border-radius: 50%;background-color: aqua;margin-left: 15px;}
+        li.ac{background-color: orangered;}
+    </style>
+    <script src="js/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+<div class="box">
+    <div class="pic">
+        <span>Slice 1 - Image 1</span>
+        <span>Slice 1 - Image 2</span>
+        <span>Slice 1 - Image 3</span>
+        <span>Slice 1 - Image 4</span>
+    </div>
+    <div  class="pic">
+        <span>Slice 2 - Image 1</span>
+        <span>Slice 2 - Image 2</span>
+        <span>Slice 2 - Image 3</span>
+        <span>Slice 2 - Image 4</span>
+    </div>
+    <div  class="pic">
+        <span>Slice 3 - Image 1</span>
+        <span>Slice 3 - Image 2</span>
+        <span>Slice 3 - Image 3</span>
+        <span>Slice 3 - Image 4</span>
+    </div>
+    <div  class="pic">
+        <span>Slice 4 - Image 1</span>
+        <span>Slice 4 - Image 2</span>
+        <span>Slice 4 - Image 3</span>
+        <span>Slice 4 - Image 4</span>
+    </div>
+    <ul class="choose">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</div>
+</body>
+</html>
+<script>
+    $(function () {
+        var box = $('.box');
+        var w = box.width() / 4;
+        var h = box.height();
+        box.children('.pic').width(w).height(h);
+        $('span').width(w).height(h);
+        function init() {
+            $('.pic').each(function (i) {
+                $(this).children('span').each(function (index) {
+                    $(this).css({
+                        "backgroundImage": "url(images/0" + (index + 1) + ".jpg)",
+                        "backgroundPosition": (-w * i) + "px 0px "
+                    });
+                });
+            });
+        }
+        init();
+        function show(cur, beAbout) {
+            $('.pic').each(function (i) {
+                $(this).children('span').each(function (index) {
+                    if (i % 2 == 0) {
+                        $(this).css({"left": -w + "px"});
+                    } else {
+                        $(this).css({"left": w + "px"});
+                    }
+                });
+                $(this).children('span').css({"z-index": 1});
+                $(this).children('span').eq(cur).css({"left": "0px"});
+                $(this).children('span').eq(beAbout).css({"z-index": 2});
+            });
+            $("li").removeClass().eq(beAbout).addClass("ac");
+        }
+        show(0, 0);
+        var cur = 0;
+        var beAbout = 0;
+        $("li").each(function (i) {
+            $(this).click(function () {
+                $('.pic').children('span').finish();
+                beAbout = $(this).index();
+                show(cur, beAbout);
+                if (cur == beAbout) {
+                    return false;
+                }
+                $('.pic').each(function (index) {
+                    if (index % 2 == 0) {
+                        $(this).children('span').eq(cur).animate({"left": w + "px"}, 1000);
+                        $(this).children('span').eq(beAbout).animate({"left": "0px"}, 1000);
+                    } else {
+                        $(this).children('span').eq(cur).animate({"left": -w + "px"}, 1000);
+                        $(this).children('span').eq(beAbout).animate({"left": "0px"}, 1000);
+                    }
+                });
+                cur = beAbout;
+            });
+        });
+    });
+</script>

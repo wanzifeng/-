@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        body{background-color: #000;}
+        .gallery{width: 980px;height: 500px;}
+        .center{position: absolute;top: 0;left: 0;right: 0;bottom: 0;margin: auto;}
+        .item{width: 196px;height: 100px;background-size: auto;position: absolute;background-color: #fff;transition: transform 1s ,opacity 1s;}
+        .pic{background-size: contain;transition: transform 1s ,opacity 1s;}
+    </style>
+    <script src="js/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+<div class="gallery center"></div>
+</body>
+</html>
+<script>
+    $(function () {
+        var arr=[-100,-50,0,50,100];
+        var gallery=$(".gallery");
+        function init() {
+            for(var i=0 ;i<25;i++){
+                var x=i%5;
+                var y=parseInt(i/5);
+                $('<div class="item"><div class="pic center"></div></div>')
+                    .css({"left":x*196+"px","top":y*100+"px"})
+                    .appendTo(".gallery");
+            }
+        }
+        init();
+        showAll();
+        function showAll() {
+            $(".item").each(function (i) {
+                var x=i%5;
+                var y=parseInt(i/5);
+                var deg=Math.random()*60-30;
+               /*$(this).css({"transform":"translate("+arr[x]+"px,"+arr[y]+"px) rotate("+deg+"deg)"});*/
+               $(this).css({"transform":"translate("+(x-2)*50+"px,"+(y-2)*50+"px) rotate("+deg+"deg)"});
+               $(this).find(".pic").css({
+                   "backgroundImage":"url(images/"+i+".jpg)",
+                   "backgroundSize":"contain",
+                   "transform":"scale(0.95)",
+                   "opacity":.2
+               });
+            });
+        }
+        function showItems(arg) {
+            $(".item").each(function (i) {
+                var x=i%5;
+                var y=parseInt(i/5);
+                $(this).css({"transform":"translate(0,0) rotate(0) scale(1,1)"});
+                $(this).find('.pic').css({
+                    "backgroundImage":"url(images/"+arg+".jpg)",
+                    "backgroundSize":"auto",
+                    "backgroundPosition":x*(-196)+"px "+y*(-100)+"px",
+                    "transform":"scale(1)",
+                    "opacity":1
+                });
+            });
+        }
+        var flag=true;
+        $(".item").click(function () {
+            var thisImage=$(this).index();
+            if(flag){
+                showItems(thisImage);
+            }else{
+                showAll();
+            }
+            flag=!flag;
+        });
+    });
+</script>
